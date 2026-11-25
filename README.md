@@ -46,7 +46,7 @@ npm run preview   # 预览构建产物
 
 - [x] `src/data/profile.ts` 的 `github` 已填真实地址；`astro.config.mjs` 的 `site` 默认值与之对应
 - [x] 部署工作流会自动推导 `SITE_URL` / `BASE_PATH`（用户站点 `/`，项目站点 `/repo-name`），并生成 `sitemap-index.xml`
-- [ ] `public/img/avatar.svg`：当前为占位图，替换为真实照片（如 `portrait.jpg`）后，改 `src/pages/index.astro` 中 `.portrait` 的 `src` 即可
+- [x] 真实头像与机构标志已接入：`public/img/portrait.jpg`、`swpu.png`、`cas.png`、`bosch.png`、`lumeany.png`（更新时同名替换即可）
 - [ ] `public/resume.pdf`：如简历更新，替换同名文件即可
 - [ ] `src/content/projects/*.md` 的 `links` 字段：补充真实仓库 / 论文链接（可选，留空不显示）
 - [ ] 邮箱在首页展示（电话仅在简历 PDF 中），若介意匿名化写法可在 `index.astro` 调整

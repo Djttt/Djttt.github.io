@@ -345,7 +345,16 @@ h2[id] {
   width: 64px;
   height: 64px;
   margin: 2px 20px 10px 0;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px var(--chip-shadow);
+}
+
+.entry-logo--wide {
+  width: 96px;
+  height: 28px;
+  object-fit: contain;
+  margin-top: 8px;
 }
 
 .entry-title {
@@ -409,6 +418,17 @@ h2[id] {
 
 .project-entry {
   margin: 1.1rem 0 1.5rem;
+  display: flow-root;
+}
+
+.project-logo {
+  float: left;
+  width: 56px;
+  height: 56px;
+  margin: 2px 18px 10px 0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px var(--chip-shadow);
 }
 
 .project-entry > h3 {

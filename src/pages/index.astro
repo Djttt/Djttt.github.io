@@ -58,6 +58,13 @@ const news = [
 ];
 
 const openNews = 4;
+
+/** 项目条目浮动标志 */
+const projectLogos: Record<string, string> = {
+  'rtc-wavefront': 'cas.png',
+  'gpu-training-platform': 'swpu.png',
+  lumeany: 'lumeany.png',
+};
 ---
 
 <Base title="邓君 · Deng Jun — 学术主页">
@@ -65,7 +72,7 @@ const openNews = 4;
     <section class="blurb">
       <h2 class="hero-title">Hi，我是邓君！</h2>
       <p>
-        <img class="portrait" src={route('/img/avatar.svg')} alt="邓君 肖像" width="158" height="208" />
+        <img class="portrait" src={route('/img/portrait.jpg')} alt="邓君 证件照" width="158" height="208" />
         我是<strong>西南石油大学</strong>计算机技术专业的硕士研究生（2027 届），方向是
         <strong>LLM 推理优化</strong>、<strong>RAG 与智能体系统</strong>和
         <strong>GPU 并行计算</strong>。2026 年我在<strong>博世（BOSCH）</strong>完成实习，为
@@ -131,6 +138,15 @@ const openNews = 4;
             if (!p) return null;
             return (
               <article class="project-entry">
+                {projectLogos[p.id] && (
+                  <img
+                    class="project-logo"
+                    src={route(`/img/${projectLogos[p.id]}`)}
+                    alt={`${p.data.org} 标志`}
+                    width="56"
+                    height="56"
+                  />
+                )}
                 <h3>
                   <a href={route(`/projects/${p.id}/`)}>{p.data.title}</a>
                 </h3>
@@ -169,7 +185,7 @@ const openNews = 4;
 
     <h2 id="exp">业界实习</h2>
     <article class="entry">
-      <img class="entry-logo" src={route('/img/bosch.svg')} alt="博世标志" width="64" height="64" />
+      <img class="entry-logo entry-logo--wide" src={route('/img/bosch.png')} alt="博世 BOSCH 标志" width="96" height="28" />
       <h3 class="entry-title">{bosch.company}（{bosch.companyEn}）</h3>
       <p class="entry-sub">
         暑期实习生 · {bosch.dept}
@@ -213,7 +229,7 @@ const openNews = 4;
     {
       education.map((edu) => (
         <article class="entry">
-          <img class="entry-logo" src={route('/img/swpu.svg')} alt="西南石油大学标志" width="64" height="64" />
+          <img class="entry-logo" src={route('/img/swpu.png')} alt="西南石油大学标志" width="64" height="64" />
           <h3 class="entry-title">
             {edu.school}
             <span class="badge badge--org">{edu.badge}</span>
