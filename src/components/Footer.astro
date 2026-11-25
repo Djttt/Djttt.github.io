@@ -1,0 +1,48 @@
+---
+import { profile } from '../data/profile';
+import { route } from '../utils/path';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="page foot-inner">
+    <span class="foot-copy">
+      © {year} {profile.name}（{profile.nameEn}）· 基于 Astro 构建 · 部署于 GitHub Pages
+    </span>
+    <span class="foot-links">
+      <a href={route('/resume.pdf')} download>下载简历 PDF</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <a href={`mailto:${profile.email}`} rel="noopener">邮件联系</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <a href={profile.github} rel="noopener" target="_blank">GitHub</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 3.5rem;
+    background: var(--paper);
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-block: 1.5rem 2.4rem;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--ink-3);
+  }
+  .foot-links a {
+    color: var(--ink-2);
+  }
+  .foot-links a:hover {
+    color: var(--accent);
+  }
+  .sep {
+    margin-inline: 0.45rem;
+  }
+</style>

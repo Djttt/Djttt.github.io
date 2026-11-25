@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#21447d"/>
+  <rect x="4" y="4" width="56" height="56" fill="none" stroke="#fbf8f3" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="32" y="45" font-family="Noto Serif SC, Songti SC, serif" font-size="36" font-weight="700" fill="#fbf8f3" text-anchor="middle">邓</text>
+</svg>

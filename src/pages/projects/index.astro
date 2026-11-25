@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import { route } from '../../utils/path';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base title="项目成果 · 邓君" description="邓君的代表项目：自适应光学实时波前处理（CUDA）、GPU 算力平台、LumeAny 跨平台视频解析工具。">
+  <div class="page article-head">
+    <p class="article-kicker">selected works — {projects.length} entries</p>
+    <h1 class="article-title">项目成果</h1>
+    <p class="article-meta">
+      从 GPU 算子优化到 RAG 检索链路：每个项目附带可验证的量化指标与工程决策记录。
+    </p>
+  </div>
+
+  <section class="sec">
+    <div class="page">
+      <ol class="refs">
+        {
+          projects.map((p, i) => (
+            <li class="ref">
+              <span class="ref-no">[{i + 1}]</span>
+              <div class="ref-main">
+                <h2 class="ref-title">
+                  <a href={route(`/projects/${p.id}/`)}>{p.data.title}</a>
+                </h2>
+                <p class="ref-meta">
+                  <span class="org">{p.data.org}</span> · <span class="period">{p.data.period}</span> · {p.data.role}
+                </p>
+                <p class="ref-abstract">{p.data.summary}</p>
+                {p.data.metrics.length > 0 && (
+                  <div class="ref-metrics">
+                    {p.data.metrics.map((m) => (
+                      <span>
+                        <b>{m.value}</b>
+                        {m.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div class="tags">
+                  {p.data.tags.map((t) => (
+                    <span class="tag">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ref-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.6rem;
+    margin-top: 0.6rem;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--ink-2);
+  }
+  .ref-metrics b {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 0.35rem;
+  }
+</style>

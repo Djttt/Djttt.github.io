@@ -1,0 +1,223 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile, bench } from '../data/profile';
+import { internships } from '../data/experience';
+import { skills } from '../data/skills';
+import { route } from '../utils/path';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const bosch = internships[0];
+---
+
+<Base title="邓君 · Deng Jun — 学术主页">
+  <section class="front-matter page">
+    <p class="fm-kicker">deng jun · scholarly homepage — updated {profile.updated} · {profile.location}, cn</p>
+
+    <h1 class="fm-title">面向 LLM 推理与高性能系统的工程实践</h1>
+    <p class="fm-subtitle">
+      Deng Jun — LLM Inference, RAG / Agent Systems &amp; GPU Performance Engineering
+    </p>
+
+    <p class="fm-affil">
+      <strong>{profile.name}</strong> · {profile.affiliation} · 计算机技术硕士（2027 届）
+      <span class="badge">双一流</span>
+    </p>
+    <p class="fm-meta">{profile.email} · {profile.location} · updated {profile.updated}</p>
+
+    <div class="fm-abstract">
+      <span class="lbl">摘要 —</span>
+      聚焦高性能 AI 系统的工程落地：在博世（BOSCH）实习期间构建非标设备智能知识库
+      RAG（Hit@1 83.75% → 93.50%），并在 NVIDIA DGX Spark
+      上完成端侧大模型推理服务优化（实测吞吐 ≈ 2×）；科研项目中以 CUDA
+      将自适应光学波前处理单帧耗时由 220ms 降至 28ms。研究方向涵盖
+      LLM 推理调度、KV Cache 复用、检索增强生成与 GPU 并行计算，成果均以<strong>可量化的实测指标</strong>呈现。
+    </div>
+
+    <div class="fm-cta">
+      <a class="btn" href={route('/experience')}>实习经历</a>
+      <a class="btn" href={route('/projects')}>项目成果</a>
+      <a class="btn btn--plain" href={route('/resume.pdf')} download>下载简历 PDF</a>
+    </div>
+  </section>
+
+  <section class="sec" id="overview">
+    <div class="page sec-grid">
+      <div class="sec-mark">
+        <span class="sec-no">1</span>
+        <span class="sec-key">benchmark</span>
+      </div>
+      <div class="sec-body">
+        <h2>成果速览</h2>
+        <p class="section-lead">以下指标全部来自实习与项目实测，可追溯至对应的技术上下文。</p>
+        <table class="bench">
+          <tbody>
+            {
+              bench.map((b) => (
+                <tr>
+                  <td class="b-label">
+                    {b.label}
+                    <span class="b-note">{b.note}</span>
+                  </td>
+                  <td class="b-value">{b.value}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec rule-top" id="internship">
+    <div class="page sec-grid">
+      <div class="sec-mark">
+        <span class="sec-no">2</span>
+        <span class="sec-key">internship</span>
+      </div>
+      <div class="sec-body">
+        <h2>实习经历</h2>
+        <article>
+          <div class="tl-head">
+            <span class="tl-title">{bosch.company}（{bosch.companyEn}）</span>
+            <span class="tl-when">{bosch.period}</span>
+          </div>
+          <p class="tl-sub">实习部门 {bosch.dept}</p>
+          {
+            bosch.programs.map((p) => (
+              <div class="prog-preview">
+                <h3 class="prog-title">{p.title}</h3>
+                <div class="inline-metrics">
+                  {p.metrics.map((m) => (
+                    <span>
+                      <b>{m.value}</b> {m.label}
+                    </span>
+                  ))}
+                </div>
+                <div class="tags">
+                  {p.stack.slice(0, 6).map((s) => (
+                    <span class="tag">{s}</span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+          <p class="more">
+            <a href={route('/experience')}>查看完整实习成果与职责细节</a>
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec rule-top" id="projects">
+    <div class="page sec-grid">
+      <div class="sec-mark">
+        <span class="sec-no">3</span>
+        <span class="sec-key">projects</span>
+      </div>
+      <div class="sec-body">
+        <h2>代表项目</h2>
+        <p class="section-lead">按引用格式排列，点击标题查看完整技术报告。</p>
+        <ol class="refs">
+          {
+            projects.map((p, i) => (
+              <li class="ref">
+                <span class="ref-no">[{i + 1}]</span>
+                <div>
+                  <h3 class="ref-title">
+                    <a href={route(`/projects/${p.id}/`)}>{p.data.title}</a>
+                  </h3>
+                  <p class="ref-meta">
+                    <span class="org">{p.data.org}</span> · <span class="period">{p.data.period}</span>
+                  </p>
+                  <p class="ref-abstract">{p.data.summary}</p>
+                  <div class="tags">
+                    {p.data.tags.map((t) => (
+                      <span class="tag">{t}</span>
+                    ))}
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec rule-top" id="skills">
+    <div class="page sec-grid">
+      <div class="sec-mark">
+        <span class="sec-no">4</span>
+        <span class="sec-key">skills</span>
+      </div>
+      <div class="sec-body">
+        <h2>能力版图</h2>
+        {
+          skills.map((s) => (
+            <div class="skill-strip">
+              <span class="ss-name">{s.name}</span>
+              <div class="tags">
+                {s.tags.slice(0, 5).map((t) => (
+                  <span class="tag">{t}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+        <p class="more">
+          <a href={route('/about')}>教育背景、论文、荣誉与联系方式</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prog-preview {
+    margin-top: 1.5rem;
+  }
+  .prog-title {
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  .inline-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.6rem;
+    margin-top: 0.4rem;
+    font-family: var(--sans);
+    font-size: 0.86rem;
+    color: var(--ink-2);
+  }
+  .inline-metrics b {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 0.35rem;
+  }
+  .skill-strip {
+    display: flex;
+    align-items: baseline;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .skill-strip:last-of-type {
+    border-bottom: none;
+  }
+  .ss-name {
+    font-weight: 700;
+    min-width: 11rem;
+  }
+  .more {
+    margin-top: 1.6rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+  }
+</style>

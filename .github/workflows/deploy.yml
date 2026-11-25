@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+on:
+  # 每次推送到 main 分支时自动构建部署
+  push:
+    branches: [main]
+  # 允许在 Actions 页面手动触发
+  workflow_dispatch:
+
+# 授权 GitHub Pages 部署
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只允许一个部署，新的运行会取消旧的
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 根据仓库名推导站点地址与子路径：
+      # - 用户站点（<owner>.github.io）→ BASE_PATH=/
+      # - 项目站点（如 personal-site）  → BASE_PATH=/<repo>
+      - name: Derive Pages paths
+        id: paths
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPO" == "$OWNER.github.io" ]]; then
+            echo "base_path=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "base_path=/${REPO}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "site_url=https://${OWNER}.github.io/" >> "$GITHUB_OUTPUT"
+
+      - name: Build Astro
+        env:
+          SITE_URL: ${{ steps.paths.outputs.site_url }}
+          BASE_PATH: ${{ steps.paths.outputs.base_path }}
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
