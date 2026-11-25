@@ -1,45 +1,36 @@
 ---
-import { route, isActive } from '../utils/path';
-const pathname = Astro.url.pathname;
+import { route } from '../utils/path';
+const home = route('/');
 const nav = [
-  { label: '首页', path: '/' },
-  { label: '实习经历', path: '/experience' },
-  { label: '项目成果', path: '/projects' },
-  { label: '关于我', path: '/about' },
+  { label: '动态', hash: '#news' },
+  { label: '项目', hash: '#projects' },
+  { label: '实习', hash: '#exp' },
+  { label: '教育', hash: '#edu' },
+  { label: '技能', hash: '#skills' },
+  { label: '荣誉', hash: '#awards' },
 ];
 ---
 
 <header class="masthead">
   <div class="masthead-inner">
-    <a class="brand" href={route('/')} aria-label="邓君 · 返回首页">
-      <span class="monogram" aria-hidden="true">邓</span>
-      <span class="brand-text">
-        <span class="brand-name">邓君 · Deng Jun</span>
-        <span class="brand-sub">西南石油大学 · 计算机技术硕士</span>
-      </span>
-    </a>
+    <a class="brand" href={`${home}#top`} aria-label="邓君 · 返回首页">邓君 <span class="brand-en">Deng Jun</span></a>
     <nav class="nav" aria-label="主导航">
       {
         nav.map((item) => (
-          <a
-            href={route(item.path)}
-            aria-current={isActive(pathname, item.path) ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
+          <a href={`${home}${item.hash}`}>{item.label}</a>
         ))
       }
-      <button class="theme-toggle" id="theme-toggle" aria-label="切换深浅色主题" title="切换深浅色主题">
-        ◐
-      </button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="切换深浅色主题" title="切换深浅色主题">◐</button>
     </nav>
   </div>
 </header>
 
 <style>
-  .brand-text {
-    display: flex;
-    flex-direction: column;
+  .brand-en {
+    color: var(--muted-ink);
+    font-weight: 500;
+    font-size: 0.86em;
+    margin-left: 2px;
   }
 </style>
 

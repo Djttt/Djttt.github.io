@@ -4,11 +4,15 @@
 
 ## 设计理念
 
-- **论文题录式首页**：姓名、单位、摘要、关键词，以学术期刊首页的开本呈现
-- **参考文献式项目列表**：`[1] [2] [3]` 引用格式，点击展开完整技术报告
-- **实测指标为视觉主角**：等宽字体呈现 benchmark 数据，弱化装饰
-- **配色**：普鲁士蓝（#21447d）+ 纸本暖白 + 注疏红（仅引注编号）；支持深色模式（右上角 ◐ 切换）
-- **字体**：Spectral（拉丁衬线）+ Noto Serif SC（中文正文）+ IBM Plex Sans/Mono（界面与数字）
+参考经典学者单页（如 smiles724.github.io）的展示方式：
+
+- **单页长滚动 + 锚点导航**：动态 / 项目 / 实习 / 教育 / 技能 / 荣誉，无需翻页
+- **简介区（blurb）**：「Hi，我是邓君！」+ 头像右浮动 + 加粗链接的自我介绍 + 社交图标行
+- **News 动态**：红蓝渐变的日期条目，旧动态「更多动态」折叠
+- **机构徽标左浮动**：教育 / 实习条目采用 logo 浮动 + 大写小字的时间标签
+- **论文式项目列表**：venue 行（机构 · 时间 · 角色）+ 灰色 conference-tag 技术栈 chips + 实测指标内联强调，点击查看完整技术报告
+- **配色**：钢蓝 `#345f93` + 砖红悬停 `#8b3f32` + 细线分节（#e3e6e8），无卡片化；支持深色模式（导航 ◐ 切换）
+- **字体**：Libre Baskerville + Noto Serif SC（标题）· Source Sans 3 + Noto Sans SC（正文）· Inter（导航/日期/标签）· IBM Plex Mono（指标数字）
 
 ## 本地开发
 
@@ -42,9 +46,10 @@ npm run preview   # 预览构建产物
 
 - [x] `src/data/profile.ts` 的 `github` 已填真实地址；`astro.config.mjs` 的 `site` 默认值与之对应
 - [x] 部署工作流会自动推导 `SITE_URL` / `BASE_PATH`（用户站点 `/`，项目站点 `/repo-name`），并生成 `sitemap-index.xml`
+- [ ] `public/img/avatar.svg`：当前为占位图，替换为真实照片（如 `portrait.jpg`）后，改 `src/pages/index.astro` 中 `.portrait` 的 `src` 即可
 - [ ] `public/resume.pdf`：如简历更新，替换同名文件即可
 - [ ] `src/content/projects/*.md` 的 `links` 字段：补充真实仓库 / 论文链接（可选，留空不显示）
-- [ ] 手机号、邮箱已公开展示（来自简历），若介意可删除 `about.astro` 中的对应行
+- [ ] 邮箱在首页展示（电话仅在简历 PDF 中），若介意匿名化写法可在 `index.astro` 调整
 
 ## 目录结构
 
@@ -54,18 +59,17 @@ npm run preview   # 预览构建产物
 ├── public/
 │   ├── resume.pdf               # 简历下载（复制自原 PDF）
 │   └── favicon.svg
+├── public/img/                  # 头像占位图与机构徽标（avatar.svg / swpu.svg / bosch.svg）
 └── src/
     ├── content.config.ts        # 项目集合 schema
-    ├── content/projects/*.md    # 项目完整技术报告（新增项目 = 新增一个 md）
+    ├── content/projects/*.md    # 项目完整技术报告（新增项目 = 新增一个 md，需在 index.astro 的 tracks 中登记分组）
     ├── data/                    # 简历结构化数据：profile / education / skills / experience
-    ├── components/              # Header（刊头+导航+主题切换）/ Footer
+    ├── components/              # Header（锚点导航+主题切换）/ Footer
     ├── layouts/Base.astro       # HTML 骨架、字体、SEO
-    ├── styles/global.css        # 设计令牌与学术排版样式
+    ├── styles/global.css        # 设计令牌与学者单页排版样式
     └── pages/
-        ├── index.astro          # 首页：题录 + 成果速览 + 实习摘要 + 代表项目
-        ├── experience.astro     # 实习经历（博世两大项目全量细节）+ 教育背景
-        ├── projects/            # 项目列表 + [id] 详情页
-        └── about.astro          # 技能 / 论文荣誉 / 联系方式
+        ├── index.astro          # 单页主页：简介 / 动态 / 项目 / 实习 / 教育 / 技能 / 荣誉
+        └── projects/[id].astro  # 项目完整技术报告页
 ```
 
 ## 新增项目

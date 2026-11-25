@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { profile, bench } from '../data/profile';
+import { profile } from '../data/profile';
+import { education, awards } from '../data/education';
 import { internships } from '../data/experience';
 import { skills } from '../data/skills';
 import { route } from '../utils/path';
@@ -10,214 +11,277 @@ const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
 );
 const bosch = internships[0];
+
+/** 按研究线分组的项目轨道 */
+const tracks = [
+  {
+    name: '科学计算 · GPU 系统',
+    ids: ['rtc-wavefront', 'gpu-training-platform'],
+  },
+  {
+    name: '全栈产品 · 智能体工程',
+    ids: ['lumeany'],
+  },
+];
+const byId = new Map(projects.map((p) => [p.id, p]));
+
+const news = [
+  {
+    date: '2026.11',
+    latest: true,
+    html: '个人学术主页上线，集中展示实习成果、科研项目与作品集。',
+  },
+  {
+    date: '2026.10',
+    html: '完成博世（BOSCH）实习：非标设备智能知识库 RAG 评测 Hit@1 由 <b>83.75% 提升至 93.50%</b>，DGX Spark 端侧推理吞吐实测提升<b>约 2×</b>。',
+  },
+  {
+    date: '2026.06',
+    html: '入职博世（BOSCH）实习（BMG-XCN / XSE-1），负责 <em>LLM RAG 系统</em>与<em>端侧推理优化</em>两个方向。',
+  },
+  {
+    date: '2025.11',
+    html: 'GPU 算力资源管理与容器化训练平台交付，覆盖学院实验室算力「申请 — 训练 — 回收」全生命周期。',
+  },
+  {
+    date: '2025.02',
+    html: '自适应光学 RTC 实时波前处理软件完成（中科院光电所）：单帧处理耗时 <b>220ms → 28ms</b>。',
+  },
+  {
+    date: '2025',
+    html: 'LumeAny 跨平台视频解析与下载工具上线，Web + Tauri 桌面双形态，持续迭代中。',
+  },
+  {
+    date: '2024.09',
+    html: '入读西南石油大学计算机技术专业硕士；此后以第一单位在 <em>光学学报</em>（中科院 2 区）发表论文。',
+  },
+];
+
+const openNews = 4;
 ---
 
 <Base title="邓君 · Deng Jun — 学术主页">
-  <section class="front-matter page">
-    <p class="fm-kicker">deng jun · scholarly homepage — updated {profile.updated} · {profile.location}, cn</p>
+  <div id="top">
+    <section class="blurb">
+      <h2 class="hero-title">Hi，我是邓君！</h2>
+      <p>
+        <img class="portrait" src={route('/img/avatar.svg')} alt="邓君 肖像" width="158" height="208" />
+        我是<strong>西南石油大学</strong>计算机技术专业的硕士研究生（2027 届），方向是
+        <strong>LLM 推理优化</strong>、<strong>RAG 与智能体系统</strong>和
+        <strong>GPU 并行计算</strong>。2026 年我在<strong>博世（BOSCH）</strong>完成实习，为
+        非标设备知识库构建了 LLM + RAG + Agent 智能问答系统，并在 NVIDIA DGX Spark
+        上优化端侧模型推理服务；此前在中科院光电所的科研项目中，用 CUDA 把自适应光学
+        波前处理的单帧耗时从 220ms 压到 28ms。我以<strong>可复现的实测数据</strong>衡量每项工作，
+        本页所有指标均出自简历实录。
+      </p>
+      <div class="contact-icons">
+        <a href={profile.github} target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.995 7.995 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a href={`mailto:${profile.email}`} rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.4l8 5 8-5V6H4zm16 2.7-8 5-8-5V18h16V8.7z"/></svg>
+          Email
+        </a>
+        <a href={route('/resume.pdf')} download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.2l3.6-3.6 1.4 1.4L12 16.4l-5-5.4 1.4-1.4L12 13.2V3zM4 19h16v2H4z"/></svg>
+          简历 PDF
+        </a>
+      </div>
+      <p class="meta-lines">
+        邮箱：<a href={`mailto:${profile.email}`}><i>deng_jun1029 [at] 163 [dot] com</i></a><br />
+        所在地：<i>{profile.location}，中国</i> &nbsp;&nbsp;
+        最近更新：<i>{profile.updated}</i>
+      </p>
+    </section>
 
-    <h1 class="fm-title">面向 LLM 推理与高性能系统的工程实践</h1>
-    <p class="fm-subtitle">
-      Deng Jun — LLM Inference, RAG / Agent Systems &amp; GPU Performance Engineering
+    <h2 id="news">最新动态</h2>
+    <ul class="news-list">
+      {
+        news.slice(0, openNews).map((n) => (
+          <li>
+            <span class="news-date">[{n.date}]</span>
+            <span class="news-text" set:html={(n.latest ? '<span class="new-flag">NEW</span>' : '') + n.html} />
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="news-list collapsible" id="more-news">
+      {
+        news.slice(openNews).map((n) => (
+          <li>
+            <span class="news-date">[{n.date}]</span>
+            <span class="news-text" set:html={n.html} />
+          </li>
+        ))
+      }
+    </ul>
+    <p class="read-more-line">
+      <button class="content-toggle" data-toggle="more-news" data-expand="更多动态" data-collapse="收起">更多动态</button>
     </p>
 
-    <p class="fm-affil">
-      <strong>{profile.name}</strong> · {profile.affiliation} · 计算机技术硕士（2027 届）
-      <span class="badge">双一流</span>
-    </p>
-    <p class="fm-meta">{profile.email} · {profile.location} · updated {profile.updated}</p>
-
-    <div class="fm-abstract">
-      <span class="lbl">摘要 —</span>
-      聚焦高性能 AI 系统的工程落地：在博世（BOSCH）实习期间构建非标设备智能知识库
-      RAG（Hit@1 83.75% → 93.50%），并在 NVIDIA DGX Spark
-      上完成端侧大模型推理服务优化（实测吞吐 ≈ 2×）；科研项目中以 CUDA
-      将自适应光学波前处理单帧耗时由 220ms 降至 28ms。研究方向涵盖
-      LLM 推理调度、KV Cache 复用、检索增强生成与 GPU 并行计算，成果均以<strong>可量化的实测指标</strong>呈现。
-    </div>
-
-    <div class="fm-cta">
-      <a class="btn" href={route('/experience')}>实习经历</a>
-      <a class="btn" href={route('/projects')}>项目成果</a>
-      <a class="btn btn--plain" href={route('/resume.pdf')} download>下载简历 PDF</a>
-    </div>
-  </section>
-
-  <section class="sec" id="overview">
-    <div class="page sec-grid">
-      <div class="sec-mark">
-        <span class="sec-no">1</span>
-        <span class="sec-key">benchmark</span>
-      </div>
-      <div class="sec-body">
-        <h2>成果速览</h2>
-        <p class="section-lead">以下指标全部来自实习与项目实测，可追溯至对应的技术上下文。</p>
-        <table class="bench">
-          <tbody>
-            {
-              bench.map((b) => (
-                <tr>
-                  <td class="b-label">
-                    {b.label}
-                    <span class="b-note">{b.note}</span>
-                  </td>
-                  <td class="b-value">{b.value}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec rule-top" id="internship">
-    <div class="page sec-grid">
-      <div class="sec-mark">
-        <span class="sec-no">2</span>
-        <span class="sec-key">internship</span>
-      </div>
-      <div class="sec-body">
-        <h2>实习经历</h2>
-        <article>
-          <div class="tl-head">
-            <span class="tl-title">{bosch.company}（{bosch.companyEn}）</span>
-            <span class="tl-when">{bosch.period}</span>
-          </div>
-          <p class="tl-sub">实习部门 {bosch.dept}</p>
-          {
-            bosch.programs.map((p) => (
-              <div class="prog-preview">
-                <h3 class="prog-title">{p.title}</h3>
-                <div class="inline-metrics">
-                  {p.metrics.map((m) => (
-                    <span>
-                      <b>{m.value}</b> {m.label}
-                    </span>
-                  ))}
-                </div>
-                <div class="tags">
-                  {p.stack.slice(0, 6).map((s) => (
-                    <span class="tag">{s}</span>
-                  ))}
-                </div>
-              </div>
-            ))
-          }
-          <p class="more">
-            <a href={route('/experience')}>查看完整实习成果与职责细节</a>
-          </p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec rule-top" id="projects">
-    <div class="page sec-grid">
-      <div class="sec-mark">
-        <span class="sec-no">3</span>
-        <span class="sec-key">projects</span>
-      </div>
-      <div class="sec-body">
-        <h2>代表项目</h2>
-        <p class="section-lead">按引用格式排列，点击标题查看完整技术报告。</p>
-        <ol class="refs">
-          {
-            projects.map((p, i) => (
-              <li class="ref">
-                <span class="ref-no">[{i + 1}]</span>
-                <div>
-                  <h3 class="ref-title">
-                    <a href={route(`/projects/${p.id}/`)}>{p.data.title}</a>
-                  </h3>
-                  <p class="ref-meta">
-                    <span class="org">{p.data.org}</span> · <span class="period">{p.data.period}</span>
-                  </p>
-                  <p class="ref-abstract">{p.data.summary}</p>
-                  <div class="tags">
-                    {p.data.tags.map((t) => (
-                      <span class="tag">{t}</span>
+    <h2 id="projects">项目与研究成果</h2>
+    <p class="venue-line">* 本页所有指标均为实习 / 项目中的实测数据，点击标题查看完整技术报告。</p>
+    {
+      tracks.map((t) => (
+        <div>
+          <h3 class="track-title">{t.name}</h3>
+          {t.ids.map((id) => {
+            const p = byId.get(id);
+            if (!p) return null;
+            return (
+              <article class="project-entry">
+                <h3>
+                  <a href={route(`/projects/${p.id}/`)}>{p.data.title}</a>
+                </h3>
+                <p class="venue-line">
+                  {p.data.org}
+                  <span class="sep">·</span>
+                  {p.data.period}
+                  <span class="sep">·</span>
+                  {p.data.role}
+                </p>
+                {p.data.metrics.length > 0 && (
+                  <div class="stats">
+                    {p.data.metrics.map((m) => (
+                      <span>
+                        <b>{m.value}</b>
+                        {m.label}
+                      </span>
                     ))}
                   </div>
+                )}
+                <p class="desc">{p.data.summary}</p>
+                <div class="tags">
+                  {p.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
                 </div>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </div>
-  </section>
+                <p class="read-more-line">
+                  <a href={route(`/projects/${p.id}/`)}>查看完整技术报告</a>
+                </p>
+              </article>
+            );
+          })}
+        </div>
+      ))
+    }
 
-  <section class="sec rule-top" id="skills">
-    <div class="page sec-grid">
-      <div class="sec-mark">
-        <span class="sec-no">4</span>
-        <span class="sec-key">skills</span>
-      </div>
-      <div class="sec-body">
-        <h2>能力版图</h2>
-        {
-          skills.map((s) => (
-            <div class="skill-strip">
-              <span class="ss-name">{s.name}</span>
-              <div class="tags">
-                {s.tags.slice(0, 5).map((t) => (
-                  <span class="tag">{t}</span>
+    <h2 id="exp">业界实习</h2>
+    <article class="entry">
+      <img class="entry-logo" src={route('/img/bosch.svg')} alt="博世标志" width="64" height="64" />
+      <h3 class="entry-title">{bosch.company}（{bosch.companyEn}）</h3>
+      <p class="entry-sub">
+        暑期实习生 · {bosch.dept}
+        <br />
+        <span class="period">{bosch.period}</span>
+      </p>
+      {
+        bosch.programs.map((prog, i) => (
+          <div class="project-entry">
+            <h3>{prog.title}</h3>
+            <div class="stats">
+              {prog.metrics.map((m) => (
+                <span>
+                  <b>{m.value}</b>
+                  {m.label}
+                </span>
+              ))}
+            </div>
+            <p class="desc">{prog.intro}</p>
+            <div class="collapsible" id={`pts-${i}`}>
+              <ul class="entry-points">
+                {prog.points.map((pt) => (
+                  <li>{pt}</li>
                 ))}
-              </div>
+              </ul>
+            </div>
+            <div class="tags">
+              {prog.stack.map((s) => (
+                <span class="tag">{s}</span>
+              ))}
+            </div>
+            <p class="read-more-line">
+              <button class="content-toggle" data-toggle={`pts-${i}`} data-expand="展开技术细节" data-collapse="收起技术细节">展开技术细节</button>
+            </p>
+          </div>
+        ))
+      }
+    </article>
+
+    <h2 id="edu">教育背景</h2>
+    {
+      education.map((edu) => (
+        <article class="entry">
+          <img class="entry-logo" src={route('/img/swpu.svg')} alt="西南石油大学标志" width="64" height="64" />
+          <h3 class="entry-title">
+            {edu.school}
+            <span class="badge badge--org">{edu.badge}</span>
+          </h3>
+          <p class="entry-sub">
+            {edu.degree} · {edu.school2}
+            <br />
+            <span class="period">{edu.period}</span>
+          </p>
+          <ul class="entry-points">
+            {edu.points.map((pt) => (
+              <li>{pt}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+
+    <h2 id="skills">技能版图</h2>
+    {
+      skills.map((s) => (
+        <div class="skill-group">
+          <h3>{s.name}</h3>
+          <div>
+            <p>{s.desc}</p>
+            <div class="tags">
+              {s.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+
+    <h2 id="awards">论文与荣誉</h2>
+    <div class="rows">
+      <div class="row">
+        <time>2024 –</time>
+        <div class="row-body">
+          <strong>光学学报</strong>
+          <span class="badge badge--journal">中科院 2 区</span>
+          <span class="entry-sub"> · 论文 1 篇（第一单位在读发表）</span>
+        </div>
+      </div>
+      {
+        awards
+          .filter((a) => !a.name.includes('光学学报'))
+          .map((a) => (
+            <div class="row">
+              <span class="row-label">{a.year || '—'}</span>
+              <div class="row-body">{a.name}</div>
             </div>
           ))
-        }
-        <p class="more">
-          <a href={route('/about')}>教育背景、论文、荣誉与联系方式</a>
-        </p>
-      </div>
+      }
     </div>
-  </section>
+  </div>
 </Base>
 
-<style>
-  .prog-preview {
-    margin-top: 1.5rem;
-  }
-  .prog-title {
-    font-size: 1.02rem;
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-  }
-  .inline-metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.6rem;
-    margin-top: 0.4rem;
-    font-family: var(--sans);
-    font-size: 0.86rem;
-    color: var(--ink-2);
-  }
-  .inline-metrics b {
-    font-family: var(--mono);
-    color: var(--accent);
-    font-weight: 600;
-    margin-right: 0.35rem;
-  }
-  .skill-strip {
-    display: flex;
-    align-items: baseline;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--rule-soft);
-  }
-  .skill-strip:last-of-type {
-    border-bottom: none;
-  }
-  .ss-name {
-    font-weight: 700;
-    min-width: 11rem;
-  }
-  .more {
-    margin-top: 1.6rem;
-    font-family: var(--sans);
-    font-size: 0.9rem;
-  }
-</style>
+<script>
+  (function () {
+    document.querySelectorAll<HTMLButtonElement>('.content-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.dataset.toggle ?? '');
+        if (!target) return;
+        var open = target.classList.toggle('open');
+        btn.textContent = open ? btn.dataset.collapse ?? '收起' : btn.dataset.expand ?? '展开';
+      });
+    });
+  })();
+</script>

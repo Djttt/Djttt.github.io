@@ -12,7 +12,7 @@ interface Props {
 const {
   title,
   description =
-    '邓君（Deng Jun）的学术主页：教育背景、博世（BOSCH）实习成果、RAG / LLM 推理 / GPU 并行计算项目与作品集的可视化展示。',
+    '邓君（Deng Jun）的学术主页：LLM 推理优化、RAG / Agent 工程与 GPU 并行计算——博世实习成果、科研项目与作品集。',
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
@@ -28,7 +28,7 @@ const faviconHref = route('/favicon.svg');
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
-    <meta name="theme-color" content="#21447d" />
+    <meta name="theme-color" content="#345f93" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -48,7 +48,7 @@ const faviconHref = route('/favicon.svg');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+SC:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
     />
   </head>
   <body>
@@ -68,7 +68,7 @@ const faviconHref = route('/favicon.svg');
     background: var(--accent);
     color: #fff;
     padding: 0.45rem 0.9rem;
-    font-family: var(--sans);
+    font-family: var(--font-ui);
     font-size: 0.85rem;
     border-radius: 0 0 4px 0;
   }

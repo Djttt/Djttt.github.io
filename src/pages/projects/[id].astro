@@ -26,7 +26,8 @@ const links = project.data.links ?? {};
 <Base title={`${project.data.title} · 项目成果 · 邓君`} description={project.data.summary}>
   <div class="page article-head">
     <p class="article-kicker">
-      project [{String(project.data.order).padStart(2, '0')}]
+      project [{String(project.data.order).padStart(2, '0')}] ·
+      <a href={`${route('/')}#projects`}>返回项目列表</a>
     </p>
     <h1 class="article-title">{project.data.title}</h1>
     <p class="article-meta">
